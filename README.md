@@ -1,7 +1,9 @@
 wp2github.py
 ============
 
-Command-line tool that converts WordPress-style Readme file to GitHub Markdown Readme
+Command-line tool that converts WordPress-style Readme file to GitHub Markdown Readme.
+
+Inspired by https://github.com/benbalter/WP-Readme-to-Github-Markdown
 
 Usage
 -----
