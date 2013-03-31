@@ -26,7 +26,7 @@ from collections import OrderedDict
 
 def parse_arguments():
     p = argparse.ArgumentParser(
-        description='Converts WordPress plugin readme file '
+        description='Convert WordPress plugin readme file '
         + 'to GitHub Flavored Markdown',
         version='wp2github.py 1.0')
 
