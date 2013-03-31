@@ -6,7 +6,7 @@ Command-line tool that converts WordPress-style Readme file to GitHub Markdown R
 Usage
 -----
 
-`wp2github.py --source SOURCE --target TARGET`
+`python wp2github.py --source SOURCE --target TARGET`
 
 Versioning
 ----------
