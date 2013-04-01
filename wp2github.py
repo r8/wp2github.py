@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
-import argparse, string, re
+import argparse, string, re, sys
 from pprint import pprint
 from collections import OrderedDict
 
@@ -38,7 +38,12 @@ def parse_arguments():
     return p.parse_args()
 
 def convert(source, target):
-    input_file = open(source, 'r')
+    try:
+        input_file = open(source, 'r')
+    except Exception, e:
+        print "Error opening source file: %s" % source
+        sys.exit(1)
+
     name, data = split_sections(input_file.readlines())
     input_file.close
 
@@ -47,7 +52,12 @@ def convert(source, target):
     for name in data.keys():
         output += format_section(name, data[name])
 
-    output_file = open(target, 'w')
+    try:
+        output_file = open(target, 'w')
+    except Exception, e:
+        print "Error opening target file: %s" % target
+        sys.exit(1)
+
     output_file.write(output)
     output_file.close
 
