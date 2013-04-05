@@ -5,6 +5,11 @@ Command-line tool that converts WordPress-style Readme file to GitHub Markdown R
 
 Inspired by https://github.com/benbalter/WP-Readme-to-Github-Markdown
 
+Requirements
+------------
+
+Python 2.7
+
 Usage
 -----
 
