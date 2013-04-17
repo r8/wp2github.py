@@ -21,7 +21,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 import argparse, string, re, sys
-from pprint import pprint
 from collections import OrderedDict
 
 def parse_arguments():
