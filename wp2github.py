@@ -44,7 +44,7 @@ def convert(source, target):
         sys.exit(1)
 
     name, data = split_sections(input_file.readlines())
-    input_file.close
+    input_file.close()
 
     output = format_header(name, data['main'])
 
@@ -58,7 +58,7 @@ def convert(source, target):
         sys.exit(1)
 
     output_file.write(output)
-    output_file.close
+    output_file.close()
 
 def split_sections(data):
     name = data.pop(0).strip("= \r\n")
