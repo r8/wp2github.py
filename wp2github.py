@@ -84,12 +84,12 @@ def split_sections(data):
 def format_header(name, data):
     output = "# %s\n\n" % name
 
-    list = True
+    list_item = True
     for line in data.split("\n"):
         if not line:
-            list = False
+            list_item = False
 
-        if list:
+        if list_item:
             output += "* "
         output += "%s\n" % line
 
