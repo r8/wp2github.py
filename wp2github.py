@@ -39,7 +39,7 @@ def parse_arguments():
 def convert(source, target):
     try:
         input_file = open(source, 'r')
-    except Exception, e:
+    except IOError:
         print "Error opening source file: %s" % source
         sys.exit(1)
 
@@ -53,7 +53,7 @@ def convert(source, target):
 
     try:
         output_file = open(target, 'w')
-    except Exception, e:
+    except IOError:
         print "Error opening target file: %s" % target
         sys.exit(1)
 
@@ -112,7 +112,8 @@ def format_line(line):
 
 def main():
     arguments = parse_arguments()
-    if not arguments: sys.exit(2)
+    if not arguments:
+        sys.exit(2)
 
     convert(arguments.source, arguments.target)
 
