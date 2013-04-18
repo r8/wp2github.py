@@ -23,18 +23,20 @@ THE SOFTWARE.
 import argparse, string, re, sys
 from collections import OrderedDict
 
+
 def parse_arguments():
     p = argparse.ArgumentParser(
         description='Convert WordPress plugin readme file '
-        + 'to GitHub Flavored Markdown',
+                    + 'to GitHub Flavored Markdown',
         version='wp2github.py 1.0')
 
     p.add_argument('--source', '-s', default='readme.txt',
-                    help='Source file path (default: readme.txt)')
+                   help='Source file path (default: readme.txt)')
     p.add_argument('--target', '-t', default='README.md',
-                    help='Destination file path (default: README.md)')
+                   help='Destination file path (default: README.md)')
 
     return p.parse_args()
+
 
 def convert(source, target):
     try:
@@ -60,6 +62,7 @@ def convert(source, target):
     output_file.write(output)
     output_file.close()
 
+
 def split_sections(data):
     name = data.pop(0).strip("= \r\n")
 
@@ -81,6 +84,7 @@ def split_sections(data):
 
     return name, output
 
+
 def format_header(name, data):
     output = "# %s\n\n" % name
 
@@ -95,6 +99,7 @@ def format_header(name, data):
 
     return output
 
+
 def format_section(name, data):
     if name in ['main', 'screenshots']:
         return ''
@@ -106,9 +111,11 @@ def format_section(name, data):
 
     return output
 
+
 def format_line(line):
     line = re.sub(r'^=([^=]*?)=', r'###\1', line)
     return line
+
 
 def main():
     arguments = parse_arguments()
@@ -116,6 +123,7 @@ def main():
         sys.exit(2)
 
     convert(arguments.source, arguments.target)
+
 
 if __name__ == '__main__':
     main()
