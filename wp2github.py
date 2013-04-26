@@ -93,7 +93,7 @@ def format_header(name, data):
 
     list_item = True
     for line in data.split("\n"):
-        if not line:
+        if not line.strip():
             list_item = False
 
         if list_item:
