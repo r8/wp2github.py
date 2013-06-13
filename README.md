@@ -10,6 +10,11 @@ Requirements
 
 Python 2.7
 
+Installation
+------------
+
+`python setup.py install`
+
 Usage
 -----
 
