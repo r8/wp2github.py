@@ -31,17 +31,38 @@
         <hr>
 
         <section id="main_content">
-          <h1>wp2github.py</h1>
+          <h1>
+<a name="wp2githubpy" class="anchor" href="#wp2githubpy"><span class="octicon octicon-link"></span></a>wp2github.py</h1>
 
 <p>Command-line tool that converts WordPress-style Readme file to GitHub Markdown Readme.</p>
 
 <p>Inspired by <a href="https://github.com/benbalter/WP-Readme-to-Github-Markdown">https://github.com/benbalter/WP-Readme-to-Github-Markdown</a></p>
 
-<h2>Usage</h2>
+<h2>
+<a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h2>
 
-<p><code>python wp2github.py --source SOURCE --target TARGET</code></p>
+<p>Python 2.7</p>
 
-<h2>Versioning</h2>
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<pre><code>python setup.py install
+</code></pre>
+
+<p>This will create a <code>wp2github</code> script in /usr/local/bin (linux) or c:\Python2.7\Scripts (windows)</p>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>See: <code>wp2github -h</code></p>
+
+<p>For example:</p>
+
+<pre><code>wp2github --source SOURCE.txt --target TARGET.md
+</code></pre>
+
+<h2>
+<a name="versioning" class="anchor" href="#versioning"><span class="octicon octicon-link"></span></a>Versioning</h2>
 
 <p>This project implements the Semantic Versioning guidelines.</p>
 
@@ -57,7 +78,8 @@
 <li>Bug fixes and misc changes bumps the patch</li>
 </ul><p>For more information on SemVer, please visit <a href="http://semver.org">http://semver.org</a>.</p>
 
-<h2>License</h2>
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
 
 <p>Copyright (c) 2013 Sergey Storchay, <a href="http://r8.com.ua">http://r8.com.ua</a></p>
 
