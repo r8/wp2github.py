@@ -13,12 +13,18 @@ Python 2.7
 Installation
 ------------
 
-`python setup.py install`
+    python setup.py install
+
+This will create a `wp2github` script in /usr/local/bin (linux) or c:\Python2.7\Scripts (windows)
 
 Usage
 -----
 
-`python wp2github.py --source SOURCE --target TARGET`
+See: `wp2github -h`
+
+For example:
+
+    wp2github --source SOURCE.txt --target TARGET.md
 
 Versioning
 ----------
