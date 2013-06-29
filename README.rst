@@ -18,6 +18,12 @@ Installation
 
     python setup.py install
 
+Also you may use pip:
+
+::
+
+    pip install wp2github
+
 This will create a ``wp2github`` script in /usr/local/bin (linux) or
 c:2.7(windows)
 
