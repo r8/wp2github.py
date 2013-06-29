@@ -15,7 +15,7 @@ with open("requirements.txt") as f:
 setup(name="wp2github",
       version=_version.__version__,
       description="Convert WordPress plugin readme file to GitHub Flavored Markdown",
-      long_description=open("README.md").read(),
+      long_description=open("README.rst").read(),
       author="Sergey Storchay",
       author_email="r8@r8.com.ua",
       url="https://github.com/r8/wp2github.py",
