@@ -24,7 +24,6 @@ import string
 import sys
 import re
 import argparse
-import httplib
 from collections import OrderedDict
 import config
 
@@ -146,13 +145,6 @@ class Wp2github:
     def format_screenshot_link(self, i):
         link = "screenshot-%i.%s" % (i, self.arguments.image_extension)
         return link
-
-    def image_exists(self, site, path):
-        conn = httplib.HTTPConnection(site)
-        conn.request('HEAD', path)
-        response = conn.getresponse()
-        conn.close()
-        return response.status == 200
 
     def run(self):
         self.convert(self.arguments.source, self.arguments.target)
