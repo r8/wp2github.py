@@ -25,13 +25,13 @@ import sys
 import re
 import argparse
 from collections import OrderedDict
+import config
 
 
 def parse_arguments():
     p = argparse.ArgumentParser(
-        description='Convert WordPress plugin readme file '
-                    + 'to GitHub Flavored Markdown',
-        version='wp2github.py 1.0')
+        description=config.__description__,
+        version='%s %s' % (config.__title__, config.__version__))
 
     p.add_argument('--source', '-s', default='readme.txt',
                    help='Source file path (default: readme.txt)')
