@@ -24,6 +24,7 @@ import string
 import sys
 import re
 import argparse
+import httplib
 from collections import OrderedDict
 import config
 
@@ -104,10 +105,13 @@ def format_header(name, data):
 
 
 def format_section(name, data):
-    if name in ['main', 'screenshots']:
+    if name == 'main':
         return ''
 
     output = "\n## %s\n" % string.capwords(name)
+
+    if name == 'screenshots':
+        return output + format_screenshots(data)
 
     for line in data.split("\n"):
         output += "%s\n" % format_line(line)
@@ -118,6 +122,35 @@ def format_section(name, data):
 def format_line(line):
     line = re.sub(r'^=([^=]*?)=', r'###\1', line)
     return line
+
+
+def format_screenshots(data):
+    output = ''
+    i = 0
+
+    for line in data.split("\n"):
+        if not line.strip():
+            output += "%s\n" % line
+        else:
+            i += 1
+            text = re.sub(r'^[0-9]+\.\s+(.*?)', r'\1', line)
+            link = format_screenshot_link(i)
+            output += "![%s](%s \"%s\")\n\n" % (text, link, text)
+
+    return output
+
+
+def format_screenshot_link(i):
+    link = "http://wordpress.org/plugins/pluginname/screenshot-%i.png" % i
+    return link
+
+
+def image_exists(site, path):
+    conn = httplib.HTTPConnection(site)
+    conn.request('HEAD', path)
+    response = conn.getresponse()
+    conn.close()
+    return response.status == 200
 
 
 def main():
