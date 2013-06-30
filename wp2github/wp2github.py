@@ -24,109 +24,140 @@ import string
 import sys
 import re
 import argparse
+import httplib
 from collections import OrderedDict
+import config
 
 
-def parse_arguments():
-    p = argparse.ArgumentParser(
-        description='Convert WordPress plugin readme file '
-                    + 'to GitHub Flavored Markdown',
-        version='wp2github.py 1.0')
+class Wp2github:
+    arguments = []
 
-    p.add_argument('--source', '-s', default='readme.txt',
-                   help='Source file path (default: readme.txt)')
-    p.add_argument('--target', '-t', default='README.md',
-                   help='Destination file path (default: README.md)')
+    def __init__(self):
+        self.arguments = self.parse_arguments()
+        if not self.arguments:
+            sys.exit(2)
 
-    return p.parse_args()
+    def parse_arguments(self):
+        p = argparse.ArgumentParser(
+            description=config.__description__,
+            version='%s %s' % (config.__title__, config.__version__))
 
+        p.add_argument('--source', '-s', default='readme.txt',
+                       help='Source file path (default: readme.txt)')
+        p.add_argument('--target', '-t', default='README.md',
+                       help='Destination file path (default: README.md)')
+        p.add_argument('--image-extension', '-e', default='png',
+                       help='Extension of screenshot files (default: png)')
 
-def convert(source, target):
-    try:
-        input_file = open(source, 'r')
-    except IOError:
-        print "Error opening source file: %s" % source
-        sys.exit(1)
+        return p.parse_args()
 
-    name, data = split_sections(input_file.readlines())
-    input_file.close()
+    def convert(self, source, target):
+        try:
+            input_file = open(source, 'r')
+        except IOError:
+            print "Error opening source file: %s" % source
+            sys.exit(1)
 
-    output = format_header(name, data['main'])
+        name, data = self.split_sections(input_file.readlines())
+        input_file.close()
 
-    for name in data.keys():
-        output += format_section(name, data[name])
+        output = self.format_header(name, data['main'])
 
-    try:
-        output_file = open(target, 'w')
-    except IOError:
-        print "Error opening target file: %s" % target
-        sys.exit(1)
+        for name in data.keys():
+            output += self.format_section(name, data[name])
 
-    output_file.write(output)
-    output_file.close()
+        try:
+            output_file = open(target, 'w')
+        except IOError:
+            print "Error opening target file: %s" % target
+            sys.exit(1)
 
+        output_file.write(output)
+        output_file.close()
 
-def split_sections(data):
-    name = data.pop(0).strip("= \r\n")
+    def split_sections(self, data):
+        name = data.pop(0).strip("= \r\n")
 
-    output = OrderedDict()
-    section_name = 'main'
-    section_body = ''
+        output = OrderedDict()
+        section_name = 'main'
+        section_body = ''
 
-    for line in data:
-        section_match = re.match('^==[^=]*?==', line)
-        if section_match:
-            output[section_name] = section_body.rstrip(" \r\n")
-            section_body = ''
-            section_name = line.strip("= \r\n").lower()
-        else:
-            section_body += line.replace("\r\n", "\n").replace("\r", "\n")
+        for line in data:
+            section_match = re.match('^==[^=]*?==', line)
+            if section_match:
+                output[section_name] = section_body.rstrip(" \r\n")
+                section_body = ''
+                section_name = line.strip("= \r\n").lower()
+            else:
+                section_body += line.replace("\r\n", "\n").replace("\r", "\n")
 
-    if section_body:
-        output[section_name] = section_body
+        if section_body:
+            output[section_name] = section_body
 
-    return name, output
+        return name, output
 
+    def format_header(self, name, data):
+        output = "# %s\n\n" % name
 
-def format_header(name, data):
-    output = "# %s\n\n" % name
+        list_item = True
+        for line in data.split("\n"):
+            if not line.strip():
+                list_item = False
 
-    list_item = True
-    for line in data.split("\n"):
-        if not line.strip():
-            list_item = False
+            if list_item:
+                output += "* "
+            output += "%s\n" % line
 
-        if list_item:
-            output += "* "
-        output += "%s\n" % line
+        return output
 
-    return output
+    def format_section(self, name, data):
+        if name == 'main':
+            return ''
 
+        output = "\n## %s\n" % string.capwords(name)
 
-def format_section(name, data):
-    if name in ['main', 'screenshots']:
-        return ''
+        if name == 'screenshots':
+            return output + self.format_screenshots(data)
 
-    output = "\n## %s\n" % string.capwords(name)
+        for line in data.split("\n"):
+            output += "%s\n" % self.format_line(line)
 
-    for line in data.split("\n"):
-        output += "%s\n" % format_line(line)
+        return output
 
-    return output
+    def format_line(self, line):
+        line = re.sub(r'^=([^=]*?)=', r'###\1', line)
+        return line
 
+    def format_screenshots(self, data):
+        output = ''
+        i = 0
 
-def format_line(line):
-    line = re.sub(r'^=([^=]*?)=', r'###\1', line)
-    return line
+        for line in data.split("\n"):
+            if not line.strip():
+                output += "%s\n" % line
+            else:
+                i += 1
+                text = re.sub(r'^[0-9]+\.\s+(.*?)', r'\1', line)
+                link = self.format_screenshot_link(i)
+                output += "![%s](%s \"%s\")\n_%s_\n\n" % (text, link, text, text)
 
+        return output
 
-def main():
-    arguments = parse_arguments()
-    if not arguments:
-        sys.exit(2)
+    def format_screenshot_link(self, i):
+        link = "screenshot-%i.%s" % (i, self.arguments.image_extension)
+        return link
 
-    convert(arguments.source, arguments.target)
+    def image_exists(self, site, path):
+        conn = httplib.HTTPConnection(site)
+        conn.request('HEAD', path)
+        response = conn.getresponse()
+        conn.close()
+        return response.status == 200
+
+    def run(self):
+        self.convert(self.arguments.source, self.arguments.target)
 
 
 if __name__ == '__main__':
-    main()
+    wp2github = Wp2github()
+    wp2github.run()
