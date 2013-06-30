@@ -30,6 +30,13 @@ import config
 
 
 class Wp2github:
+    arguments = []
+
+    def __init__(self):
+        self.arguments = self.parse_arguments()
+        if not self.arguments:
+            sys.exit(2)
+
     def parse_arguments(self):
         p = argparse.ArgumentParser(
             description=config.__description__,
@@ -39,6 +46,8 @@ class Wp2github:
                        help='Source file path (default: readme.txt)')
         p.add_argument('--target', '-t', default='README.md',
                        help='Destination file path (default: README.md)')
+        p.add_argument('--image-extension', '-e', default='png',
+                       help='Extension of screenshot files (default: png)')
 
         return p.parse_args()
 
@@ -130,12 +139,12 @@ class Wp2github:
                 i += 1
                 text = re.sub(r'^[0-9]+\.\s+(.*?)', r'\1', line)
                 link = self.format_screenshot_link(i)
-                output += "![%s](%s \"%s\")\n\n" % (text, link, text)
+                output += "![%s](%s \"%s\")\n_%s_\n\n" % (text, link, text, text)
 
         return output
 
     def format_screenshot_link(self, i):
-        link = "http://wordpress.org/plugins/pluginname/screenshot-%i.png" % i
+        link = "screenshot-%i.%s" % (i, self.arguments.image_extension)
         return link
 
     def image_exists(self, site, path):
@@ -145,14 +154,10 @@ class Wp2github:
         conn.close()
         return response.status == 200
 
-    def main(self):
-        arguments = self.parse_arguments()
-        if not arguments:
-            sys.exit(2)
-
-        self.convert(arguments.source, arguments.target)
+    def run(self):
+        self.convert(self.arguments.source, self.arguments.target)
 
 
 if __name__ == '__main__':
     wp2github = Wp2github()
-    wp2github.main()
+    wp2github.run()
