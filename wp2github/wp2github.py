@@ -149,7 +149,9 @@ class Wp2github:
     def run(self):
         self.convert(self.arguments.source, self.arguments.target)
 
-
-if __name__ == '__main__':
+def main():
     wp2github = Wp2github()
     wp2github.run()
+
+if __name__ == '__main__':
+    main()
