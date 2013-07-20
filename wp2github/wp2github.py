@@ -138,7 +138,7 @@ class Wp2github:
                 i += 1
                 text = re.sub(r'^[0-9]+\.\s+(.*?)', r'\1', line)
                 link = self.format_screenshot_link(i)
-                output += "![%s](%s \"%s\")\n_%s_\n\n" % (text, link, text, text)
+                output += "![%s](%s \"%s\")     \n_%s_\n\n" % (text, link, text, text)
 
         return output
 
